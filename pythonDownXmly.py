@@ -13,7 +13,7 @@ def cbk(a,b,c):
     per=100.0*a*b/c
     if per>100:
         per=100
-    print(f'{os.getpid() } --- {per}%')
+    print(f'{os.getpid()}---------{per}%')
 def get_url(q):
     req=requests.get('http://m.ximalaya.com/explore/more_album?page=1&per_page=12000&category_id=12&condition=rank&status=0').json()['html']
     reqFrom=html.fromstring(req)
@@ -36,20 +36,25 @@ def get_url(q):
                 f'http://m.ximalaya.com/album/more_tracks?url=%2Falbum%2Fmore_tracks&aid={tmpUrl}&page={page}').json()[
                 'sound_ids']
             for id in sound_ids:
-                print(f'get{id}')
+                # print(f'get{id}')
                 q.put(id)
 def get_sound_ids(sid_q):
     while True:
         id=sid_q.get(True)
         print(id)
         if not id:
+            time.sleep(0.5)
             continue
         get_info=requests.get(f'http://m.ximalaya.com/tracks/{id}.json').json()
+        # print(get_info)
         if os.path.isfile(f'/data/down/mp3/test/{get_info["title"]}.m4a'):
-            pass
+            continue
         else:
-            print(f'/data/down/mp3/test/test/{get_info["title"]}.m4a{os.getppid()}')
-            urllib.request.urlretrieve(f'{get_info["play_path_64"]}',f'/data/down/mp3/test/{get_info["title"]}.m4a',cbk)
+            if not get_info["play_path_64"]:
+                continue
+            else:
+                urllib.request.urlretrieve(f'{get_info["play_path_64"]}',f'/data/down/mp3/test/{get_info["title"]}.m4a',cbk)
+
 
 
 def main():
