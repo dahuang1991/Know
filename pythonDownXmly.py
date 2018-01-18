@@ -56,7 +56,7 @@ def get_url(q):
 def get_sound_ids(sid_q):
     while True:
         id = sid_q.get(True)
-        print(id)
+        print(os.getpid())
         if not id:
             time.sleep(0.5)
             continue
@@ -68,8 +68,8 @@ def get_sound_ids(sid_q):
             if not get_info["play_path_64"]:
                 continue
             else:
-                urllib.request.urlretrieve(f'{get_info["play_path_64"]}',
-                                           f'/data/down/mp3/test/{get_info["title"]}.m4a', cbk)
+
+                urllib.request.urlretrieve(f'{get_info["play_path_64"]}',f'/data/down/mp3/test/{get_info["title"]}.m4a')
 
 
 def main():
@@ -84,4 +84,5 @@ def main():
 
 
 if __name__ == '__main__':
+
     main()
